@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Success Tracker - Jupiter Universe</title>
+    <title>Cookies Success Tracker</title>
     <style>
         * {
             margin: 0;
@@ -12,8 +12,8 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0a0e27; /* Dark space background */
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', cursive, sans-serif;
+            background: linear-gradient(135deg, #fff4e6 0%, #ffe0b5 50%, #ffd4a3 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -23,8 +23,8 @@
             overflow-x: hidden;
         }
         
-        /* Animated starfield background */
-        .stars {
+        /* Floating cookies background */
+        .cookies-bg {
             position: fixed;
             top: 0;
             left: 0;
@@ -34,57 +34,64 @@
             z-index: 0;
         }
         
-        .star {
+        .floating-cookie {
             position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
-            border-radius: 50%;
-            animation: blink 3s ease-in-out infinite;
+            font-size: 2em;
+            animation: float 8s ease-in-out infinite;
+            opacity: 0.3;
         }
         
-        @keyframes blink {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.5); }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(180deg); }
         }
         
-        /* Shooting stars */
-        .shooting-star {
+        /* Sprinkles animation */
+        .sprinkle {
             position: fixed;
-            width: 2px;
-            height: 2px;
-            background: white;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
-            animation: shoot 3s linear infinite;
-            opacity: 0;
+            animation: fall 4s linear infinite;
+            opacity: 0.6;
         }
         
-        @keyframes shoot {
-            0% {
-                opacity: 1;
-                transform: translateX(0) translateY(0);
-            }
-            100% {
-                opacity: 0;
-                transform: translateX(-500px) translateY(500px);
-            }
+        @keyframes fall {
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
         
         .container {
-            background: rgba(10, 14, 39, 0.85);
-            backdrop-filter: blur(20px);
-            border-radius: 30px;
+            background: linear-gradient(145deg, #fff9f0 0%, #fff 100%);
+            border-radius: 40px;
             box-shadow: 
-                0 30px 90px rgba(102, 126, 234, 0.5),
-                0 0 0 1px rgba(255, 255, 255, 0.1),
-                inset 0 0 100px rgba(138, 43, 226, 0.1);
+                0 20px 60px rgba(210, 105, 30, 0.3),
+                0 0 0 8px rgba(255, 255, 255, 0.8),
+                0 0 0 12px rgba(222, 184, 135, 0.4);
             max-width: 700px;
             width: 100%;
             padding: 50px;
             position: relative;
             z-index: 1;
-            border: 1px solid rgba(138, 43, 226, 0.4);
+            border: 4px dashed #d2691e;
+        }
+        
+        .container::before {
+            content: '🍪';
+            position: absolute;
+            top: -30px;
+            left: 30px;
+            font-size: 3em;
+            transform: rotate(-15deg);
+        }
+        
+        .container::after {
+            content: '🍪';
+            position: absolute;
+            top: -25px;
+            right: 30px;
+            font-size: 2.5em;
+            transform: rotate(25deg);
         }
         
         .header {
@@ -94,34 +101,34 @@
         }
         
         .logo {
-            font-size: 4em;
+            font-size: 5em;
             margin-bottom: 15px;
-            animation: rotate-planet 15s linear infinite;
+            animation: bounce 2s ease-in-out infinite;
             display: inline-block;
-            filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.6));
+            filter: drop-shadow(0 5px 15px rgba(210, 105, 30, 0.4));
         }
         
-        @keyframes rotate-planet {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(10deg); }
         }
         
         .header h1 {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: linear-gradient(135deg, #d2691e 0%, #cd853f 50%, #daa520 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-size: 2.5em;
+            font-size: 2.8em;
             margin-bottom: 10px;
-            font-weight: 800;
+            font-weight: 900;
             letter-spacing: -1px;
-            text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+            text-shadow: 2px 2px 4px rgba(210, 105, 30, 0.2);
         }
         
         .header p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1.05em;
-            font-weight: 500;
+            color: #8b4513;
+            font-size: 1.1em;
+            font-weight: 600;
         }
         
         .form-group {
@@ -130,49 +137,49 @@
         
         label {
             display: block;
-            color: rgba(255, 255, 255, 0.95);
-            font-weight: 600;
+            color: #8b4513;
+            font-weight: 700;
             margin-bottom: 10px;
-            font-size: 0.95em;
+            font-size: 1em;
         }
         
         input, select, textarea {
             width: 100%;
             padding: 14px;
-            border: 2px solid rgba(102, 126, 234, 0.3);
-            border-radius: 12px;
+            border: 3px solid #deb887;
+            border-radius: 20px;
             font-size: 1em;
             transition: all 0.3s;
             font-family: inherit;
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-            backdrop-filter: blur(10px);
+            background: #fffaf0;
+            color: #8b4513;
         }
         
         input::placeholder, textarea::placeholder {
-            color: rgba(255, 255, 255, 0.4);
+            color: #cd853f;
         }
         
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: #667eea;
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2), 0 0 20px rgba(102, 126, 234, 0.3);
+            border-color: #d2691e;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(210, 105, 30, 0.2), 0 5px 20px rgba(210, 105, 30, 0.3);
+            transform: scale(1.02);
         }
         
         select {
             cursor: pointer;
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23667eea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23d2691e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 10px center;
+            background-position: right 12px center;
             background-size: 20px;
             padding-right: 40px;
         }
         
         select option {
-            background: #1a1f3a;
-            color: white;
+            background: #fffaf0;
+            color: #8b4513;
         }
         
         textarea {
@@ -196,37 +203,37 @@
             flex: 1;
             min-width: 50px;
             padding: 12px 10px;
-            border: 2px solid rgba(102, 126, 234, 0.3);
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.9);
-            border-radius: 12px;
+            border: 3px solid #deb887;
+            background: linear-gradient(145deg, #fff 0%, #fffaf0 100%);
+            color: #8b4513;
+            border-radius: 20px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 700;
             transition: all 0.3s;
             font-size: 0.9em;
-            backdrop-filter: blur(10px);
+            font-family: inherit;
         }
         
         .rating-btn:hover {
-            border-color: #667eea;
-            background: rgba(102, 126, 234, 0.2);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            border-color: #d2691e;
+            background: linear-gradient(145deg, #ffe4b5 0%, #ffd4a3 100%);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(210, 105, 30, 0.4);
         }
         
         .rating-btn.selected {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #d2691e 0%, #cd853f 100%);
             color: white;
-            border-color: #667eea;
-            transform: scale(1.08);
-            box-shadow: 0 5px 25px rgba(102, 126, 234, 0.6);
+            border-color: #8b4513;
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(210, 105, 30, 0.6);
         }
         
         .rating-btn small {
             display: block;
             font-size: 0.75em;
             margin-top: 2px;
-            opacity: 0.8;
+            opacity: 0.9;
         }
         
         .checkbox-group {
@@ -234,37 +241,38 @@
             align-items: center;
             gap: 12px;
             padding: 15px;
-            border: 2px solid rgba(102, 126, 234, 0.3);
-            border-radius: 12px;
+            border: 3px solid #deb887;
+            border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
+            background: #fffaf0;
         }
         
         .checkbox-group:hover {
-            border-color: #667eea;
-            background: rgba(102, 126, 234, 0.15);
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+            border-color: #d2691e;
+            background: #ffe4b5;
+            box-shadow: 0 5px 20px rgba(210, 105, 30, 0.3);
+            transform: translateY(-2px);
         }
         
         .checkbox-group input[type="checkbox"] {
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             cursor: pointer;
-            accent-color: #667eea;
+            accent-color: #d2691e;
         }
         
         .checkbox-group span {
-            color: rgba(255, 255, 255, 0.9);
+            color: #8b4513;
+            font-weight: 600;
         }
         
         .cg-link {
             margin-top: 12px;
             padding: 12px;
-            background: rgba(255, 193, 7, 0.15);
-            border: 2px solid rgba(255, 193, 7, 0.4);
-            border-radius: 10px;
+            background: linear-gradient(145deg, #ffe4b5 0%, #ffd4a3 100%);
+            border: 3px dashed #d2691e;
+            border-radius: 15px;
             display: none;
             text-align: center;
         }
@@ -275,52 +283,57 @@
         }
         
         .cg-link a {
-            color: #ffd54f;
+            color: #8b4513;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 1.05em;
             display: inline-block;
-            padding: 8px 16px;
-            background: rgba(255, 193, 7, 0.2);
-            border-radius: 8px;
+            padding: 10px 20px;
+            background: white;
+            border-radius: 15px;
             transition: all 0.3s;
+            border: 2px solid #d2691e;
         }
         
         .cg-link a:hover {
-            background: rgba(255, 193, 7, 0.3);
+            background: #d2691e;
+            color: white;
             transform: scale(1.05);
         }
         
         .cg-link p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9em;
+            color: #8b4513;
+            font-size: 0.95em;
             margin-bottom: 8px;
+            font-weight: 600;
         }
         
         .submit-btn {
             width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            background: linear-gradient(135deg, #d2691e 0%, #cd853f 50%, #daa520 100%);
             color: white;
             border: none;
-            border-radius: 15px;
-            font-size: 1.2em;
-            font-weight: 700;
+            border-radius: 25px;
+            font-size: 1.3em;
+            font-weight: 900;
             cursor: pointer;
             transition: all 0.3s;
             margin-top: 15px;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+            box-shadow: 0 10px 30px rgba(210, 105, 30, 0.5);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            font-family: inherit;
+            border: 4px solid #8b4513;
         }
         
         .submit-btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.7);
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(210, 105, 30, 0.7);
         }
         
         .submit-btn:active {
-            transform: translateY(-2px);
+            transform: translateY(-3px) scale(1.01);
         }
         
         .submit-btn:disabled {
@@ -331,23 +344,23 @@
         
         .message {
             padding: 18px;
-            border-radius: 12px;
+            border-radius: 20px;
             margin-bottom: 25px;
             display: none;
-            font-weight: 500;
-            backdrop-filter: blur(10px);
+            font-weight: 600;
+            border: 3px solid;
         }
         
         .message.success {
-            background: rgba(40, 167, 69, 0.2);
-            color: #a8e6a8;
-            border: 2px solid rgba(40, 167, 69, 0.5);
+            background: linear-gradient(145deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border-color: #28a745;
         }
         
         .message.error {
-            background: rgba(220, 53, 69, 0.2);
-            color: #ff9999;
-            border: 2px solid rgba(220, 53, 69, 0.5);
+            background: linear-gradient(145deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            border-color: #dc3545;
         }
         
         .message.show {
@@ -367,38 +380,42 @@
         }
         
         .required {
-            color: #ff6b6b;
+            color: #dc3545;
         }
         
         .help-text {
             font-size: 0.85em;
-            color: rgba(255, 255, 255, 0.6);
+            color: #8b4513;
             margin-top: 6px;
             font-style: italic;
+            font-weight: 500;
         }
         
         .info-box {
-            background: rgba(33, 150, 243, 0.15);
-            border-left: 4px solid #2196f3;
-            padding: 16px;
+            background: linear-gradient(145deg, #ffe4b5 0%, #ffd4a3 100%);
+            border-left: 6px solid #d2691e;
+            padding: 18px;
             margin-bottom: 30px;
-            border-radius: 10px;
+            border-radius: 15px;
             font-size: 0.95em;
-            color: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
+            color: #8b4513;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(210, 105, 30, 0.2);
         }
         
         .info-box strong {
-            color: #64b5f6;
+            color: #d2691e;
+            font-weight: 800;
         }
         
         .copyright {
             text-align: center;
             margin-top: 40px;
             padding-top: 30px;
-            border-top: 1px solid rgba(102, 126, 234, 0.3);
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.85em;
+            border-top: 3px dashed #deb887;
+            color: #8b4513;
+            font-size: 0.9em;
+            font-weight: 600;
         }
         
         .copyright-symbol {
@@ -406,13 +423,13 @@
             margin-right: 3px;
         }
         
-        .jupiter-text {
-            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+        .cookies-text {
+            background: linear-gradient(135deg, #d2691e, #cd853f, #daa520);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-weight: 700;
-            font-size: 1.1em;
+            font-weight: 900;
+            font-size: 1.2em;
         }
         
         @media (max-width: 600px) {
@@ -421,11 +438,11 @@
             }
             
             .header h1 {
-                font-size: 2em;
+                font-size: 2.2em;
             }
             
             .logo {
-                font-size: 3em;
+                font-size: 4em;
             }
             
             .period-selector {
@@ -439,12 +456,12 @@
     </style>
 </head>
 <body>
-    <div class="stars" id="stars"></div>
+    <div class="cookies-bg" id="cookiesBg"></div>
     
     <div class="container">
         <div class="header">
-            <div class="logo">🪐</div>
-            <h1>Success Tracker</h1>
+            <div class="logo">🍪</div>
+            <h1>Cookies Success Tracker</h1>
             <p>Weekly Performance & Attendance Check-In</p>
         </div>
         
@@ -592,11 +609,11 @@
                 </div>
             </div>
             
-            <button type="submit" class="submit-btn" id="submitBtn">🚀 Submit Weekly Check-In</button>
+            <button type="submit" class="submit-btn" id="submitBtn">🍪 Submit Weekly Check-In</button>
         </form>
         
         <div class="copyright">
-            <span class="copyright-symbol">©</span> <span class="jupiter-text">JUPITER</span>
+            <span class="copyright-symbol">©</span> <span class="cookies-text">COOKIES</span>
         </div>
     </div>
     
@@ -670,44 +687,47 @@
             }, 5000);
         }
 
-        // Create blinking stars
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            const starCount = 200;
+        // Create floating cookies
+        function createFloatingCookies() {
+            const bg = document.getElementById('cookiesBg');
+            const cookieCount = 15;
             
-            for (let i = 0; i < starCount; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 3 + 's';
-                star.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                starsContainer.appendChild(star);
+            for (let i = 0; i < cookieCount; i++) {
+                const cookie = document.createElement('div');
+                cookie.className = 'floating-cookie';
+                cookie.textContent = '🍪';
+                cookie.style.left = Math.random() * 100 + '%';
+                cookie.style.top = Math.random() * 100 + '%';
+                cookie.style.animationDelay = Math.random() * 8 + 's';
+                cookie.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                bg.appendChild(cookie);
             }
         }
         
-        // Create shooting stars
-        function createShootingStar() {
-            const shootingStar = document.createElement('div');
-            shootingStar.className = 'shooting-star';
-            shootingStar.style.left = Math.random() * 100 + '%';
-            shootingStar.style.top = Math.random() * 50 + '%';
-            document.body.appendChild(shootingStar);
+        // Create falling sprinkles
+        function createSprinkle() {
+            const sprinkle = document.createElement('div');
+            sprinkle.className = 'sprinkle';
+            const colors = ['#ff6b9d', '#ffd93d', '#6bcf7f', '#4d9fff', '#ff8c42'];
+            sprinkle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            sprinkle.style.left = Math.random() * 100 + '%';
+            sprinkle.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            document.body.appendChild(sprinkle);
             
             setTimeout(() => {
-                shootingStar.remove();
-            }, 3000);
+                sprinkle.remove();
+            }, 5000);
         }
         
-        // Initialize stars
-        createStars();
+        // Initialize decorations
+        createFloatingCookies();
         
-        // Random shooting stars
+        // Random sprinkles
         setInterval(() => {
-            if (Math.random() > 0.7) {
-                createShootingStar();
+            if (Math.random() > 0.5) {
+                createSprinkle();
             }
-        }, 3000);
+        }, 500);
         
         // Team selection handler
         document.getElementById('teamName').addEventListener('change', function() {
@@ -741,115 +761,4 @@
                 const role = selectedOption.dataset.role;
                 roleSelect.innerHTML = `<option value="${role}">${role}</option>`;
                 roleSelect.disabled = false;
-            } else {
-                roleSelect.disabled = true;
-            }
-        });
-        
-        // Help checkbox handler
-        document.getElementById('helpNeeded').addEventListener('change', function() {
-            const cgLink = document.getElementById('cgLink');
-            if (this.checked) {
-                cgLink.classList.add('show');
-            } else {
-                cgLink.classList.remove('show');
-            }
-        });
-        
-        // Rating button functionality
-        document.querySelectorAll('.rating-group').forEach(group => {
-            const buttons = group.querySelectorAll('.rating-btn');
-            const hiddenInput = group.nextElementSibling;
-            
-            buttons.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    buttons.forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
-                    hiddenInput.value = btn.dataset.rating;
-                });
-            });
-        });
-        
-        // Form submission with CORS fix
-        document.getElementById('trackerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const form = e.target;
-            const submitBtn = document.getElementById('submitBtn');
-            
-            // Validation
-            const team = document.getElementById('teamName').value;
-            const member = document.getElementById('memberName').value;
-            const role = document.getElementById('roleSelect').value;
-            const quarter = document.getElementById('quarter').value;
-            const session = document.getElementById('session').value;
-            const week = document.getElementById('week').value;
-            const attendance = document.getElementById('attendance').value;
-            const completion = document.getElementById('completionRating').value;
-            const understanding = document.getElementById('understandingRating').value;
-            const collaboration = document.getElementById('collaborationRating').value;
-            
-            if (!team || !member || !role || !quarter || !session || !week || !attendance || !completion || !understanding || !collaboration) {
-                showMessage('Please fill out all required fields (*).', 'error');
-                return;
-            }
-
-            // Gather all data
-            const formData = {
-                timestamp: new Date().toLocaleString(),
-                team: team,
-                member: member,
-                role: role,
-                quarter: quarter,
-                session: session,
-                week: week,
-                attendance: attendance,
-                completion: completion,
-                understanding: understanding,
-                collaboration: collaboration,
-                challenges: document.getElementById('challenges').value,
-                wins: document.getElementById('wins').value,
-                goals: document.getElementById('goals').value,
-                helpNeeded: document.getElementById('helpNeeded').checked ? 'Yes' : 'No'
-            };
-
-            // Disable button and show loading state
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting...';
-            
-            try {
-                // CORS-FRIENDLY METHOD: Using text/plain content type
-                const response = await fetch(SCRIPT_URL, {
-                    redirect: "follow",
-                    method: 'POST',
-                    body: JSON.stringify(formData),
-                    headers: {
-                        "Content-Type": "text/plain;charset=utf-8",
-                    },
-                });
-                
-                // With redirect: "follow", assume success if no error thrown
-                // The data has been sent to Google Sheets
-                showMessage('✅ Success! Your progress has been recorded.', 'success');
-                
-                // Reset the form
-                form.reset();
-                document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
-                document.getElementById('memberName').innerHTML = '<option value="">First select your team...</option>';
-                document.getElementById('roleSelect').innerHTML = '<option value="">Select your name first...</option>';
-                document.getElementById('roleSelect').disabled = true;
-                document.getElementById('cgLink').classList.remove('show');
-                
-            } catch (error) {
-                console.error('Submission Error:', error);
-                showMessage('❌ Submission failed. Please check your internet connection and try again.', 'error');
-            } finally {
-                // Re-enable button
-                submitBtn.disabled = false;
-                submitBtn.textContent = '🚀 Submit Weekly Check-In';
-            }
-        });
-    </script>
-</body>
-</html>
+            } else
