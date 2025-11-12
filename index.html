@@ -1,300 +1,683 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Success Tracker - Cookie Edition</title>
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Success Tracker - Cookie Edition</title>
+    <!-- Cute font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* -------- Reset -------- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    body {
-        font-family: 'Poppins', 'Quicksand', sans-serif;
-        background: linear-gradient(180deg, #fff8f1 0%, #ffe5cc 100%);
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        position: relative;
-        overflow-x: hidden;
-    }
+        /* -------- Page background -------- */
+        body {
+            font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            background: linear-gradient(180deg, #fff8f1 0%, #ffefd8 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
 
-    /* Background cookie crumbs (stars replaced) */
-    .stars {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 0;
-    }
+        /* -------- cookie crumb background (keeps your stars container) -------- */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-    .star {
-        position: absolute;
-        width: 6px;
-        height: 6px;
-        background: radial-gradient(circle, #d1a373 20%, #b58449 80%);
-        border-radius: 50%;
-        animation: floatCrumb 4s ease-in-out infinite;
-        opacity: 0.6;
-    }
+        .star {
+            /* cookie crumb look */
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle at 35% 25%, #f7d8b0 0%, #d6a063 50%, #b67a3e 100%);
+            border-radius: 50%;
+            box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset;
+            animation: crumbFloat 4s ease-in-out infinite;
+            opacity: 0.9;
+            transform-origin: center;
+        }
 
-    @keyframes floatCrumb {
-        0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; }
-        50% { transform: translateY(-10px) scale(1.2); opacity: 1; }
-    }
+        @keyframes crumbFloat {
+            0%,100% { transform: translateY(0) scale(1); opacity: 0.85; }
+            50% { transform: translateY(-8px) scale(1.15); opacity: 1; }
+        }
 
-    .shooting-star {
-        display: none; /* no shooting stars for cookie theme */
-    }
+        /* shooting "crumb" (keeps your class name and JS behavior but changed visuals) */
+        .shooting-star {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle at 30% 30%, #fff0d6 0%, #d9a86a 45%, #9a5e2a 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 14px 3px rgba(170,110,50,0.22);
+            animation: shootCrumb 2.8s linear infinite;
+            opacity: 0;
+            transform-origin: center;
+        }
 
-    .container {
-        background: #fffaf3;
-        border-radius: 30px;
-        box-shadow: 0 8px 25px rgba(181, 123, 58, 0.2);
-        max-width: 700px;
-        width: 100%;
-        padding: 50px;
-        position: relative;
-        z-index: 1;
-        border: 2px solid #e7c9a9;
-    }
+        @keyframes shootCrumb {
+            0% {
+                opacity: 1;
+                transform: translateX(0) translateY(0) rotate(0deg) scale(1);
+            }
+            60% {
+                opacity: 0.9;
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(-520px) translateY(520px) rotate(120deg) scale(0.9);
+            }
+        }
 
-    .header {
-        text-align: center;
-        margin-bottom: 40px;
-    }
-
-    .logo {
-        font-size: 4em;
-        margin-bottom: 15px;
-        display: inline-block;
-        animation: spinCookie 8s linear infinite;
-        filter: drop-shadow(0 0 10px rgba(181, 123, 58, 0.2));
-    }
-
-    @keyframes spinCookie {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    .header h1 {
-        color: #a97438;
-        font-size: 2.5em;
-        font-weight: 800;
-        margin-bottom: 8px;
-    }
-
-    .header p {
-        color: #c49a6c;
-        font-weight: 500;
-    }
-
-    .info-box {
-        background: #fff0da;
-        border-left: 4px solid #dcae76;
-        color: #8b6431;
-        padding: 16px;
-        border-radius: 12px;
-        margin-bottom: 25px;
-        font-size: 0.95em;
-    }
-
-    label {
-        display: block;
-        color: #8b5a2b;
-        font-weight: 600;
-        margin-bottom: 8px;
-        font-size: 0.95em;
-    }
-
-    select, input, textarea {
-        width: 100%;
-        padding: 14px;
-        border-radius: 12px;
-        border: 2px solid #e7c9a9;
-        background: #fffdf8;
-        font-size: 1em;
-        transition: all 0.3s;
-        color: #5b4021;
-    }
-
-    select:focus, input:focus, textarea:focus {
-        outline: none;
-        border-color: #dcae76;
-        box-shadow: 0 0 10px rgba(220, 174, 118, 0.4);
-    }
-
-    .rating-group {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    .rating-btn {
-        flex: 1;
-        min-width: 60px;
-        padding: 12px 10px;
-        border: 2px solid #e7c9a9;
-        background: #fffdf8;
-        border-radius: 12px;
-        color: #8b5a2b;
-        cursor: pointer;
-        transition: all 0.3s;
-        font-weight: 600;
-    }
-
-    .rating-btn:hover {
-        background: #f7e2c3;
-        border-color: #dcae76;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(181, 123, 58, 0.2);
-    }
-
-    .rating-btn.selected {
-        background: linear-gradient(135deg, #f2c58b, #e7b57e);
-        color: white;
-        border-color: #e7b57e;
-        box-shadow: 0 4px 12px rgba(181, 123, 58, 0.4);
-    }
-
-    .rating-btn small {
-        display: block;
-        font-size: 0.75em;
-        opacity: 0.8;
-    }
-
-    .checkbox-group {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 12px;
-        border: 2px solid #e7c9a9;
-        border-radius: 12px;
-        background: #fffdf8;
-        transition: all 0.3s;
-    }
-
-    .checkbox-group:hover {
-        background: #f9e6c7;
-        border-color: #dcae76;
-    }
-
-    .checkbox-group span {
-        color: #8b5a2b;
-    }
-
-    .cg-link {
-        background: #fff5e0;
-        border: 2px solid #e7c38c;
-        color: #8b5a2b;
-        border-radius: 10px;
-        padding: 12px;
-        margin-top: 10px;
-        display: none;
-    }
-
-    .cg-link.show {
-        display: block;
-        animation: slideDown 0.3s ease;
-    }
-
-    .cg-link a {
-        color: #a97438;
-        text-decoration: none;
-        font-weight: 600;
-    }
-
-    .cg-link a:hover {
-        text-decoration: underline;
-    }
-
-    .submit-btn {
-        width: 100%;
-        padding: 16px;
-        background: linear-gradient(135deg, #f2c58b, #e7b57e);
-        border: none;
-        border-radius: 15px;
-        color: white;
-        font-size: 1.2em;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.3s;
-        box-shadow: 0 6px 15px rgba(181, 123, 58, 0.3);
-    }
-
-    .submit-btn:hover {
-        transform: translateY(-3px);
-        background: linear-gradient(135deg, #f7d19d, #e7b57e);
-    }
-
-    .message {
-        padding: 14px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        font-weight: 500;
-        display: none;
-    }
-
-    .message.show {
-        display: block;
-    }
-
-    .message.success {
-        background: #e9f7e2;
-        color: #4f8a10;
-        border: 2px solid #a6d785;
-    }
-
-    .message.error {
-        background: #fce8e8;
-        color: #d43f3f;
-        border: 2px solid #f4a8a8;
-    }
-
-    .copyright {
-        text-align: center;
-        margin-top: 40px;
-        padding-top: 30px;
-        border-top: 1px solid #e7c9a9;
-        color: #b07b47;
-        font-size: 0.9em;
-    }
-
-    .jupiter-text {
-        color: #a97438;
-        font-weight: 700;
-    }
-
-    @keyframes slideDown {
-        from { opacity: 0; transform: translateY(-5px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 600px) {
+        /* -------- Container (card) -------- */
         .container {
-            padding: 35px 25px;
+            background: linear-gradient(180deg, #fffdfa, #fff6ef);
+            border-radius: 26px;
+            box-shadow:
+                0 22px 60px rgba(169, 112, 54, 0.12),
+                0 6px 18px rgba(166, 118, 55, 0.06);
+            max-width: 720px;
+            width: 100%;
+            padding: 44px;
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(180, 120, 62, 0.12);
+        }
+
+        .header { text-align: center; margin-bottom: 36px; position: relative; }
+
+        .logo {
+            font-size: 3.6rem;
+            margin-bottom: 12px;
+            display: inline-block;
+            animation: spinCookie 10s linear infinite;
+            filter: drop-shadow(0 6px 18px rgba(166,118,55,0.14));
+        }
+
+        @keyframes spinCookie {
+            0% { transform: rotate(0deg) }
+            100% { transform: rotate(360deg) }
         }
 
         .header h1 {
-            font-size: 2em;
+            color: #9a5e2a;
+            font-size: 2.3rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            letter-spacing: -0.6px;
         }
 
-        .logo {
-            font-size: 3em;
+        .header p {
+            color: #b97e45;
+            font-weight: 600;
+            font-size: 1rem;
         }
-    }
-</style>
+
+        .info-box {
+            background: #fff6ea;
+            border-left: 4px solid #e6b77a;
+            padding: 14px;
+            margin-bottom: 24px;
+            border-radius: 10px;
+            color: #8b5a2b;
+            font-size: 0.95rem;
+        }
+        .info-box strong { color: #a46b32; }
+
+        /* -------- form controls -------- */
+        .form-group { margin-bottom: 20px; }
+
+        label {
+            display: block;
+            color: #7a4b23;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 2px solid rgba(166, 118, 55, 0.12);
+            background: linear-gradient(180deg, #fffdf8, #fff8ef);
+            color: #5b3a20;
+            font-size: 1rem;
+            transition: all .25s ease;
+            font-family: inherit;
+            box-shadow: 0 4px 10px rgba(166,118,55,0.03) inset;
+        }
+
+        input::placeholder, textarea::placeholder { color: rgba(91,58,32,0.35); }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #e2b07a;
+            box-shadow: 0 0 0 6px rgba(226,176,122,0.12), 0 8px 30px rgba(166,118,55,0.06);
+            background: #fffaf3;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239a5e2a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 18px;
+            padding-right: 44px;
+        }
+
+        textarea { resize: vertical; min-height: 94px; }
+
+        .period-selector { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+        .help-text { font-size: 0.86rem; color: rgba(91,58,32,0.65); margin-top: 6px; font-style: italic; }
+
+        .required { color: #c94f3b; margin-left: 4px; }
+
+        /* -------- rating buttons (preserve class names) -------- */
+        .rating-group { display:flex; gap:10px; flex-wrap:wrap; }
+        .rating-btn {
+            flex: 1;
+            min-width: 52px;
+            padding: 10px;
+            border-radius: 12px;
+            border: 2px solid rgba(166,118,55,0.12);
+            background: linear-gradient(180deg,#fffdf8,#fff7eb);
+            color: #7a4b23;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all .22s ease;
+            font-size: 0.95rem;
+            box-shadow: 0 3px 10px rgba(166,118,55,0.03);
+        }
+        .rating-btn:hover {
+            transform: translateY(-3px);
+            border-color: #e2b07a;
+            box-shadow: 0 6px 18px rgba(166,118,55,0.12);
+            background: #fff3de;
+        }
+        .rating-btn.selected {
+            background: linear-gradient(135deg,#f7d9b2,#e8b07a);
+            color: #4a2b12;
+            border-color: #e0a56f;
+            transform: scale(1.04);
+            box-shadow: 0 8px 28px rgba(166,118,55,0.18);
+        }
+        .rating-btn small { display:block; font-size:0.73rem; opacity:0.85; margin-top:3px; }
+
+        /* checkbox group */
+        .checkbox-group {
+            display:flex; align-items:center; gap:12px; padding:12px;
+            border-radius:12px; cursor:pointer;
+            border:2px solid rgba(166,118,55,0.08); background: #fffdf9;
+            transition: all .18s ease;
+        }
+        .checkbox-group:hover { background:#fff4df; border-color:#e2b07a; box-shadow: 0 6px 14px rgba(166,118,55,0.08); }
+        .checkbox-group span { color:#7a4b23; font-weight:700; }
+
+        .checkbox-group input[type="checkbox"] { width:22px; height:22px; accent-color: #e2b07a; cursor:pointer; }
+
+        .cg-link { margin-top:12px; padding:12px; background:#fff7e6; border-radius:10px; border:2px solid rgba(226,176,122,0.16); display:none; text-align:center; }
+        .cg-link.show { display:block; animation: slideDown .25s ease; }
+        .cg-link a { color:#9a5e2a; text-decoration:none; font-weight:700; padding:8px 12px; border-radius:8px; background: rgba(226,176,122,0.08); display:inline-block; }
+        .cg-link a:hover { transform:scale(1.03); }
+
+        /* submit */
+        .submit-btn {
+            width:100%; padding:16px; border-radius:14px; border:none; cursor:pointer;
+            font-size:1.05rem; font-weight:800; text-transform:uppercase; letter-spacing:1px;
+            background: linear-gradient(135deg,#f7d9b2,#e8b07a);
+            color:#4a2b12; box-shadow: 0 10px 30px rgba(166,118,55,0.14);
+            transition: all .18s ease;
+        }
+        .submit-btn:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(166,118,55,0.22); }
+        .submit-btn:active { transform: translateY(-2px); }
+        .submit-btn:disabled { opacity:0.55; cursor:not-allowed; transform:none; }
+
+        /* messages */
+        .message { padding:14px; border-radius:10px; margin-bottom:18px; display:none; font-weight:600; }
+        .message.show { display:block; animation: slideDown .22s ease; }
+        .message.success { background:#e9f6ea; border:2px solid #b8e1b7; color:#2e6b33; }
+        .message.error { background:#fff2f2; border:2px solid #f3b7b7; color:#a63737; }
+
+        /* footer */
+        .copyright { text-align:center; margin-top:34px; padding-top:20px; border-top:1px solid rgba(166,118,55,0.06); color:#9b5f2a; font-size:0.92rem; }
+        .jupiter-text { color:#9a5e2a; font-weight:800; }
+
+        /* small screens */
+        @media (max-width:600px) {
+            .container { padding:28px; }
+            .header h1 { font-size:1.8rem; }
+            .logo { font-size:3rem; }
+            .period-selector { grid-template-columns: 1fr; }
+        }
+
+        @keyframes slideDown { from { opacity:0; transform: translateY(-6px) } to { opacity:1; transform: translateY(0) } }
+    </style>
 </head>
-
 <body>
     <div class="stars" id="stars"></div>
-    <!-- Everything else (HTML + JS) stays exactly the same -->
-    <!-- Paste your full HTML and JS content from your version here, unchanged -->
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">🍪</div>
+            <h1>Success Tracker</h1>
+            <p>Weekly Performance & Attendance Check-In</p>
+        </div>
+
+        <div class="info-box">
+            💡 <strong>Tip:</strong> Fill this out once per week during your team's session. Be honest—this helps YOU track your progress!
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <form id="trackerForm">
+            <div class="form-group">
+                <label for="teamName">Team/Company Name <span class="required">*</span></label>
+                <select id="teamName" required>
+                    <option value="">Select your team...</option>
+                    <option value="Ladies $ Gentlemen">Ladies $ Gentlemen</option>
+                    <option value="#101">#101</option>
+                    <option value="Jupiter">Jupiter</option>
+                    <option value="Team AuditX">Team AuditX</option>
+                    <option value="Fahrenheit 451">Fahrenheit 451</option>
+                    <option value="Girlies">Girlies</option>
+                    <option value="Cookies">Cookies</option>
+                    <option value="CG">CG</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="memberName">Your Full Name <span class="required">*</span></label>
+                <select id="memberName" required>
+                    <option value="">First select your team...</option>
+                </select>
+                <p class="help-text">Select your name from the list</p>
+            </div>
+
+            <div class="form-group">
+                <label for="roleSelect">Your Role <span class="required">*</span></label>
+                <select id="roleSelect" required disabled>
+                    <option value="">Select your name first...</option>
+                </select>
+                <p class="help-text">Your role will auto-fill after selecting your name</p>
+            </div>
+
+            <div class="form-group">
+                <label>Time Period <span class="required">*</span></label>
+                <p class="help-text">Select the Quarter, Session, and Week you're reporting for</p>
+                <div class="period-selector">
+                    <select id="quarter" required>
+                        <option value="">Quarter</option>
+                        <option value="Pre-Q1">Pre-Q1</option>
+                        <option value="Q1">Q1</option>
+                        <option value="Q2">Q2</option>
+                        <option value="Q3">Q3</option>
+                        <option value="Q4">Q4</option>
+                    </select>
+                    <select id="session" required>
+                        <option value="">Session</option>
+                        <option value="S1">S1</option>
+                        <option value="S2">S2</option>
+                        <option value="S3">S3</option>
+                    </select>
+                    <select id="week" required>
+                        <option value="">Week</option>
+                        <option value="1">Week 1</option>
+                        <option value="2">Week 2</option>
+                        <option value="3">Week 3</option>
+                        <option value="4">Week 4</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="attendance">Your Attendance This Week <span class="required">*</span></label>
+                <select id="attendance" required>
+                    <option value="">Select your status...</option>
+                    <option value="Present">✅ Present - Attended all classes this week</option>
+                    <option value="Partial">⚠️ Partial - Missed 1 class</option>
+                    <option value="Absent">❌ Absent - Missed 2+ classes</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Team Task Completion <span class="required">*</span></label>
+                <p class="help-text">How much of this week's team tasks did you personally complete?</p>
+                <div class="rating-group">
+                    <button type="button" class="rating-btn" data-rating="1">1<br><small>0-20%</small></button>
+                    <button type="button" class="rating-btn" data-rating="2">2<br><small>20-40%</small></button>
+                    <button type="button" class="rating-btn" data-rating="3">3<br><small>40-60%</small></button>
+                    <button type="button" class="rating-btn" data-rating="4">4<br><small>60-80%</small></button>
+                    <button type="button" class="rating-btn" data-rating="5">5<br><small>80-100%</small></button>
+                </div>
+                <input type="hidden" id="completionRating" required>
+            </div>
+
+            <div class="form-group">
+                <label>Understanding of Accounting Concepts <span class="required">*</span></label>
+                <p class="help-text">How well do you understand this week's accounting material?</p>
+                <div class="rating-group">
+                    <button type="button" class="rating-btn" data-rating="1">1<br><small>Confused</small></button>
+                    <button type="button" class="rating-btn" data-rating="2">2<br><small>Struggling</small></button>
+                    <button type="button" class="rating-btn" data-rating="3">3<br><small>Getting it</small></button>
+                    <button type="button" class="rating-btn" data-rating="4">4<br><small>Good grasp</small></button>
+                    <button type="button" class="rating-btn" data-rating="5">5<br><small>Confident</small></button>
+                </div>
+                <input type="hidden" id="understandingRating" required>
+            </div>
+
+            <div class="form-group">
+                <label>Team Collaboration Rating <span class="required">*</span></label>
+                <p class="help-text">How well did your team work together this week?</p>
+                <div class="rating-group">
+                    <button type="button" class="rating-btn" data-rating="1">1<br><small>Poor</small></button>
+                    <button type="button" class="rating-btn" data-rating="2">2<br><small>Fair</small></button>
+                    <button type="button" class="rating-btn" data-rating="3">3<br><small>Good</small></button>
+                    <button type="button" class="rating-btn" data-rating="4">4<br><small>Great</small></button>
+                    <button type="button" class="rating-btn" data-rating="5">5<br><small>Excellent</small></button>
+                </div>
+                <input type="hidden" id="collaborationRating" required>
+            </div>
+
+            <div class="form-group">
+                <label for="challenges">Challenges This Week</label>
+                <p class="help-text">What obstacles did you face? (Optional but recommended)</p>
+                <textarea id="challenges" placeholder="e.g., Confused about debits/credits, team member absent, didn't understand the roll mechanics..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="wins">Wins & Progress</label>
+                <p class="help-text">What went well? What are you proud of? (Optional)</p>
+                <textarea id="wins" placeholder="e.g., Successfully completed the financial statement, helped team member understand journal entries..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="goals">Goals for Next Week</label>
+                <p class="help-text">What do you want to focus on or improve? (Optional)</p>
+                <textarea id="goals" placeholder="e.g., Study balance sheet structure, be more active in team discussions, complete tasks earlier..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-group">
+                    <input type="checkbox" id="helpNeeded">
+                    <span>⚠️ I need help from CG (Instructor)</span>
+                </label>
+                <div class="cg-link" id="cgLink">
+                    <p>📧 Email the Controller General directly:</p>
+                    <a href="mailto:174070@donga.ac.kr" target="_blank">174070@donga.ac.kr</a>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">🚀 Submit Weekly Check-In</button>
+        </form>
+
+        <div class="copyright">
+            <span class="copyright-symbol">©</span> <span class="jupiter-text">JUPITER</span>
+        </div>
+    </div>
+
+    <script>
+        // REPLACE THIS URL WITH YOUR NEW APPS SCRIPT WEB APP URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyHckZdTyGQGJ8qGuiVRwpUjCoCsBOqol8B75zAexu7gv96vNIQmGKTQDevq3u2y3_xLw/exec'; 
+        
+        // Team member data
+        const teamData = {
+            "Ladies $ Gentlemen": [
+                {name: "Jony", role: "CEO"},
+                {name: "Alina", role: "CMO"},
+                {name: "Shoyadbek", role: "CFO"},
+                {name: "Ksenia", role: "CHRO"},
+                {name: "Akib", role: "CTO"}
+            ],
+            "#101": [
+                {name: "Norman", role: "CFO"},
+                {name: "Abu", role: "CEO"},
+                {name: "Khan", role: "CMO"},
+                {name: "Samandar", role: "COO"},
+                {name: "Behruz", role: "CIO"}
+            ],
+            "Jupiter": [
+                {name: "Zhaniya", role: "CFO"},
+                {name: "Sarju", role: "COO"},
+                {name: "Sanjina Shrestha", role: "CEO"},
+                {name: "Warda", role: "CHRO"},
+                {name: "Khadicha", role: "CMO"}
+            ],
+            "Team AuditX": [
+                {name: "Alam Kahaf", role: "CHRO"},
+                {name: "Joy Ahmed", role: "CEO"},
+                {name: "Hasibul", role: "CMO"},
+                {name: "Mahedi Hasan", role: "CFO"},
+                {name: "Rohan Mollik", role: "CMO"},
+                {name: "Hasan Osiul", role: "CEO"}
+            ],
+            "Fahrenheit 451": [
+                {name: "Shakhzod", role: "CTO"},
+                {name: "Ali", role: "CHRO"},
+                {name: "Islombek", role: "CMO"},
+                {name: "Abbos", role: "CFO"},
+                {name: "Salokhiddin", role: "CEO"}
+            ],
+            "Girlies": [
+                {name: "Kaden", role: "CEO"},
+                {name: "Beatrix", role: "CMO"},
+                {name: "Saurav", role: "CSO"},
+                {name: "Sarthak", role: "CFO"}
+            ],
+            "Cookies": [
+                {name: "Diyora", role: "CEO"},
+                {name: "Diana", role: "CMO"},
+                {name: "Luise", role: "CFO"},
+                {name: "Jasmin", role: "CSO"},
+                {name: "Rohan", role: "COO"}
+            ],
+            "CG": [
+                {name: "Controller General", role: "Instructor"}
+            ]
+        };
+        
+        // Helper function to display messages
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message show ${type}`;
+            setTimeout(() => {
+                messageDiv.classList.remove('show');
+            }, 5000);
+        }
+
+        // Create blinking stars (now cookie crumbs)
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 200;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Create shooting stars (crumb streaks)
+        function createShootingStar() {
+            const shootingStar = document.createElement('div');
+            shootingStar.className = 'shooting-star';
+            shootingStar.style.left = Math.random() * 100 + '%';
+            shootingStar.style.top = Math.random() * 50 + '%';
+            document.body.appendChild(shootingStar);
+            
+            setTimeout(() => {
+                shootingStar.remove();
+            }, 3000);
+        }
+        
+        // Initialize stars
+        createStars();
+        
+        // Random shooting stars
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                createShootingStar();
+            }
+        }, 3000);
+        
+        // Team selection handler
+        document.getElementById('teamName').addEventListener('change', function() {
+            const team = this.value;
+            const memberSelect = document.getElementById('memberName');
+            const roleSelect = document.getElementById('roleSelect');
+            
+            memberSelect.innerHTML = '<option value="">Select your name...</option>';
+            roleSelect.innerHTML = '<option value="">Select your name first...</option>';
+            roleSelect.disabled = true;
+            
+            if (team && teamData[team]) {
+                teamData[team].forEach(member => {
+                    const option = document.createElement('option');
+                    option.value = member.name;
+                    option.textContent = member.name;
+                    option.dataset.role = member.role;
+                    memberSelect.appendChild(option);
+                });
+            }
+        });
+        
+        // Member selection handler
+        document.getElementById('memberName').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const roleSelect = document.getElementById('roleSelect');
+            
+            roleSelect.innerHTML = '<option value="">Select your name first...</option>';
+
+            if (selectedOption && selectedOption.dataset.role) {
+                const role = selectedOption.dataset.role;
+                roleSelect.innerHTML = `<option value="${role}">${role}</option>`;
+                roleSelect.disabled = false;
+            } else {
+                roleSelect.disabled = true;
+            }
+        });
+        
+        // Help checkbox handler
+        document.getElementById('helpNeeded').addEventListener('change', function() {
+            const cgLink = document.getElementById('cgLink');
+            if (this.checked) {
+                cgLink.classList.add('show');
+            } else {
+                cgLink.classList.remove('show');
+            }
+        });
+        
+        // Rating button functionality
+        document.querySelectorAll('.rating-group').forEach(group => {
+            const buttons = group.querySelectorAll('.rating-btn');
+            const hiddenInput = group.nextElementSibling;
+            
+            buttons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    buttons.forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    hiddenInput.value = btn.dataset.rating;
+                });
+            });
+        });
+        
+        // Form submission with CORS fix
+        document.getElementById('trackerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const form = e.target;
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Validation
+            const team = document.getElementById('teamName').value;
+            const member = document.getElementById('memberName').value;
+            const role = document.getElementById('roleSelect').value;
+            const quarter = document.getElementById('quarter').value;
+            const session = document.getElementById('session').value;
+            const week = document.getElementById('week').value;
+            const attendance = document.getElementById('attendance').value;
+            const completion = document.getElementById('completionRating').value;
+            const understanding = document.getElementById('understandingRating').value;
+            const collaboration = document.getElementById('collaborationRating').value;
+            
+            if (!team || !member || !role || !quarter || !session || !week || !attendance || !completion || !understanding || !collaboration) {
+                showMessage('Please fill out all required fields (*).', 'error');
+                return;
+            }
+
+            // Gather all data
+            const formData = {
+                timestamp: new Date().toLocaleString(),
+                team: team,
+                member: member,
+                role: role,
+                quarter: quarter,
+                session: session,
+                week: week,
+                attendance: attendance,
+                completion: completion,
+                understanding: understanding,
+                collaboration: collaboration,
+                challenges: document.getElementById('challenges').value,
+                wins: document.getElementById('wins').value,
+                goals: document.getElementById('goals').value,
+                helpNeeded: document.getElementById('helpNeeded').checked ? 'Yes' : 'No'
+            };
+
+            // Disable button and show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            try {
+                // CORS-FRIENDLY METHOD: Using text/plain content type
+                const response = await fetch(SCRIPT_URL, {
+                    redirect: "follow",
+                    method: 'POST',
+                    body: JSON.stringify(formData),
+                    headers: {
+                        "Content-Type": "text/plain;charset=utf-8",
+                    },
+                });
+                
+                // With redirect: "follow", assume success if no error thrown
+                // The data has been sent to Google Sheets
+                showMessage('✅ Success! Your progress has been recorded.', 'success');
+                
+                // Reset the form
+                form.reset();
+                document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+                document.getElementById('memberName').innerHTML = '<option value="">First select your team...</option>';
+                document.getElementById('roleSelect').innerHTML = '<option value="">Select your name first...</option>';
+                document.getElementById('roleSelect').disabled = true;
+                document.getElementById('cgLink').classList.remove('show');
+                
+            } catch (error) {
+                console.error('Submission Error:', error);
+                showMessage('❌ Submission failed. Please check your internet connection and try again.', 'error');
+            } finally {
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🚀 Submit Weekly Check-In';
+            }
+        });
+    </script>
 </body>
 </html>
